@@ -36,9 +36,10 @@ public class CartController {
 
     @PostMapping("/addToCart")
     public ResponseEntity<Cart> addTocart(@RequestBody ModifyCartRequest request) {
+        log.info("action=AddToCartStart userName={}, itemId={}, quantity={} ", request.getUsername(), request.getItemId(), request.getQuantity());
         User user = userRepository.findByUsername(request.getUsername());
         if (user == null) {
-            log.info("user with username  {} not found ", request.getUsername());
+            log.info("action=AddToCart user with username  {} not found ", request.getUsername());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Optional<Item> item = itemRepository.findById(request.getItemId());
@@ -49,15 +50,17 @@ public class CartController {
         IntStream.range(0, request.getQuantity())
                 .forEach(i -> cart.addItem(item.get()));
         cartRepository.save(cart);
+        log.info("action=AddToCartCompleted userName={}, itemId={}, quantity={} ", request.getUsername(), request.getItemId(), request.getQuantity());
         return ResponseEntity.ok(cart);
     }
 
     @PostMapping("/removeFromCart")
-    public ResponseEntity<Cart> removeFromcart(@RequestBody ModifyCartRequest request) {
+    public ResponseEntity<Cart> removeFromCart(@RequestBody ModifyCartRequest request) {
+        log.info("action=RemoveFromCartStart userName={}, itemId={}, quantity={} ", request.getUsername(), request.getItemId(), request.getQuantity());
         User user = userRepository.findByUsername(request.getUsername());
         if (user == null) {
-			log.info("user with username  {} not found ", request.getUsername());
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            log.info("action=RemoveFromCart user with username  {} not found ", request.getUsername());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Optional<Item> item = itemRepository.findById(request.getItemId());
         if (!item.isPresent()) {
@@ -67,6 +70,7 @@ public class CartController {
         IntStream.range(0, request.getQuantity())
                 .forEach(i -> cart.removeItem(item.get()));
         cartRepository.save(cart);
+        log.info("action=RemoveFromCartCompleted userName={}, itemId={}, quantity={} ", request.getUsername(), request.getItemId(), request.getQuantity());
         return ResponseEntity.ok(cart);
     }
 

@@ -32,10 +32,11 @@ public class OrderController {
 
 
     @PostMapping("/submit/{username}")
-    public ResponseEntity<UserOrder> submit(@PathVariable String username) {
+    public ResponseEntity<UserOrder> submitUserOrder(@PathVariable String username) {
+        log.info("action=SubmitUserOrderStart username={}", username);
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            log.info("user with username  {} not found ", username);
+            log.info("action=SubmitUserOrder user with username={} not found ", username);
             return ResponseEntity.notFound().build();
         }
         UserOrder order = UserOrder.createFromCart(user.getCart());
@@ -45,11 +46,14 @@ public class OrderController {
 
     @GetMapping("/history/{username}")
     public ResponseEntity<List<UserOrder>> getOrdersForUser(@PathVariable String username) {
+        log.info("action=GetOrdersForUserStart username={}", username);
         User user = userRepository.findByUsername(username);
         if (user == null) {
-			log.info("user with username  {} not found ", username);
-			return ResponseEntity.notFound().build();
+            log.info("action=GetOrdersForUser user with username={} not found ", username);
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(orderRepository.findByUser(user));
+        ResponseEntity<List<UserOrder>> responseEntity = ResponseEntity.ok(orderRepository.findByUser(user));
+        log.info("action=GetOrdersForUserCompleted user with username  {} not found ", username);
+        return responseEntity;
     }
 }
