@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
+import static com.example.demo.TestUtil.getCreateUserRequest;
+import static com.example.demo.TestUtil.getUser;
 import static junit.framework.TestCase.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -101,17 +103,5 @@ public class UserControllerTest {
         assertEquals(404, response.getStatusCodeValue());
     }
 
-    private CreateUserRequest getCreateUserRequest() {
-        CreateUserRequest c = new CreateUserRequest();
-        c.setUsername("test");
-        c.setPassword("testPassword");
-        c.setConfirmPassword("testPassword");
-        return c;
-    }
 
-    private User getUser() {
-        User user = new User();
-        user.setUsername("test");
-        return user;
-    }
 }
